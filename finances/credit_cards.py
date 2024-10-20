@@ -6,7 +6,7 @@ import plotly.express as px
 
 raw = pd.read_excel("data\\CreditCards.xlsx", sheet_name=None)
 
-# General Info of Credit Cards. 
+# General Info of Credit Cards.
 raw_g = raw['General']
 raw_g = raw_g.set_index("Name", drop=True)
 print(raw_g)
