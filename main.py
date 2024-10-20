@@ -22,7 +22,7 @@ if not os.path.exists(FOLDER_NAME):
     download.charge_finance_data(FOLDER_NAME,
                                 finances_folder)
 
-TEST = 0
+TEST = 1
 
 if TEST:
     from finances import credit_cards as cc
