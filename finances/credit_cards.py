@@ -50,24 +50,37 @@ def all_cc_df(col, **kwargs):
         df.set_index('Date', inplace=True, drop=True)
         if nc == 0:
             col_df = pd.DataFrame(index = df.index, columns=name_cards)
-        col_df.loc[:, name_cards[nc]] = df.loc[:,'Cut']
+        col_df.loc[:, name_cards[nc]] = df.loc[:,col]
     return col_df
 
-def df_to_plotly_df(df: pd.DataFrame, col):
+def df_to_plotly_df(df: pd.DataFrame, col_tname, col_data, **kwargs):
     """
     Convert a Pandas DataFrame a DataFrame to Plot with Plotly. 
     """
     nx = len(df.index)
-    ny = len(df.columns)
-    result = pd.DataFrame(index = list(range(nx * ny)), columns=["Date","Card",col])
+    sel_cols = kwargs.get("cols", df.columns)
+    ny = len(sel_cols)
+    result = pd.DataFrame(index = list(range(nx * ny)), columns=["Date", col_tname, col_data])
     i = 0
     for x in df.index:
-        for y in df.columns:
-            result.loc[i, ["Date","Card",col]] = [x,y,df.loc[x,y]]
+        for y in sel_cols:
+            result.loc[i, ["Date", col_tname, col_data]] = [x,y,df.loc[x,y]]
             i = i + 1
     return result
 
-df_cut = all_cc_df("Cut")
-plot_cut = df_to_plotly_df(df_cut, "Cut")
-fig_cut = px.line(plot_cut, x = "Date", y = "Cut", color = "Card")
+# Plot by value type. (Payment, Cut, I-FM)
+PLOT_T = "I-FM"
+CARD = "Card"
+df_cut = all_cc_df(PLOT_T)
+plot_cut = df_to_plotly_df(df_cut, CARD, PLOT_T)
+fig_cut = px.line(plot_cut, x = "Date", y = PLOT_T,
+                  color = CARD, title = PLOT_T)
 fig_cut.show()
+
+# Plot by Credit Card
+CREDIT_CARD = "ORO"
+oro = raw[f"History {CREDIT_CARD}"]
+plot_oro = df_to_plotly_df(oro, "Amount","C", cols = ["Cut","Payment","I-FM"])
+fig_card = px.line(plot_oro, x = "Date", y = "Cash", color="Amount")
+fig_card.show()
+print(plot_oro)
