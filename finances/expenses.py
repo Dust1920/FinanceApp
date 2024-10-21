@@ -45,7 +45,7 @@ print(exp_ym)
 PLOT_N = ['Category', 'SubCategory', 'Concept','Credit Card', 'Sector', 'Level']
 PLOT_V =  'Amount'
 
-# Plots 
+# Plots
 for name in PLOT_N:
     fig = px.pie(exp_ym, names = name, values=PLOT_V, title= name)
     fig.show()
