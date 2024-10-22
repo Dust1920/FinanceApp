@@ -3,7 +3,7 @@
         - 
 """
 import pandas as pd
-
+import plotly.express as px
 
 raw = pd.read_excel("data\\Portfoly.xlsx", sheet_name=None)
 res = raw['Resumen']
@@ -53,8 +53,25 @@ for s in res.index:
     actives_w_s = reg[reg['Parte en Portafolio'] == s]
     if len(actives_w_s) > 0:
         active_t = actives_w_s['Precio Actual'].sum()
-        res.loc[s,'Nuevo Porcentaje'] = (active_t +  res.loc[s, 'Nueva Inversión']) / (TOTAL_PORTFOLY + NEW_INVERSION)
+        NEW_PORTFOLY = TOTAL_PORTFOLY + NEW_INVERSION
+        res.loc[s,'Nuevo Porcentaje'] = (active_t +  res.loc[s, 'Nueva Inversión']) / (NEW_PORTFOLY)
     else:
         res.loc[s,'Nuevo Porcentaje'] = 0
 
 print(res)
+
+# Pie Objective
+
+pie_obj = px.pie(res, names = res.index, values="Objetivo (%)",
+                 hole = 0.7, title="Portfoly Objective")
+# pie_obj.show()
+
+# Pie Actual
+pie_act = px.pie(res, names = res.index, values="Nuevo Porcentaje",
+                 hole = 0.7, title="Portfoly New")
+pie_act.show()
+
+# Pie Inversion
+pie_nv = px.pie(res, names = res.index, values="Nueva Inversión",
+                 hole = 0.7, title="New Inversion")
+pie_nv.show()
