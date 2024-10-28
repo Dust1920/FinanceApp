@@ -20,7 +20,7 @@ PORTFOLY = html.Div(
         html.H1("Portafolio de Inversiones"),
         html.Div(children=[
             # Distribución de Portafolio
-            dcc.Graph()
+            dcc.Graph(figure= portfoly.port_dist)
         ]),
 
         html.Div(children=[
@@ -41,7 +41,7 @@ PORTFOLY = html.Div(
 
 
 @callback(
-    Output("portfoly-table", "dash-table"), Input("new-portfoly","value")
+    Output("portfoly-table", "data"), Input("new-portfoly","value")
 )
 
 def add_new_inversion(amount):
@@ -50,4 +50,5 @@ def add_new_inversion(amount):
         all the portfoly categories.  
     """
     if amount:
-        return portfoly.res.to_dict("records")
+        port_df = 0
+        return port_df.to_dict("record")

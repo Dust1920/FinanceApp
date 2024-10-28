@@ -12,15 +12,25 @@ reg = raw['Registro']
 res = res.set_index('Sección', drop=True)
 reg = reg.set_index('Simbolo', drop=True)
 
+print(res)
 TOTAL_PORTFOLY = reg['Precio Actual'].sum()
+res_table = res.copy()
+res_table['Actual (%)'] = res_table['Actual (%)'].transform(lambda x: f"{round(x,2)}%")
+port_dist = px.pie(res, names=res.index, values="Actual (%)", hole=0.7)
+port_dist.update_layout(margin = {"t":50, "l":20, "r":0, "b":0},
+                        annotations=[
+                            dict(text=f"Valor Portafolio<br>${round(TOTAL_PORTFOLY, 2):,} MXN",
+                            x=0.5, y=0.5, font_size=20, showarrow=False)])
+
+
+"""
+
 
 NEW_INVERSION = 500
 
 #print(reg.columns)
-def difference_actua_goal():
-    return 0
-# Calculate the Difference Amount between Actual* Inversion and Goal Inversion.
 
+# Calculate the Difference Amount between Actual* Inversion and Goal Inversion.
 for s in res.index:
     actives_w_s = reg[reg['Parte en Portafolio'] == s]
     if len(actives_w_s) > 0:
@@ -60,10 +70,9 @@ for s in res.index:
     else:
         res.loc[s,'Nuevo Porcentaje'] = 0
 
-#print(res)
+"""
 
-
-
+# print(res)
 
 # Pie Objective
 if __name__ == "__main__":
