@@ -1,4 +1,6 @@
 from dash import html, dcc
+from dash import dash_table
+
 
 MULTI_COLUMN = {"padding": "5px",
                 "display": "flex",
@@ -10,10 +12,12 @@ portfoly = html.Div(
         html.H1("Portafolio de Inversiones"),
         html.Div(children=[
             # Distribución de Portafolio
+            dcc.Graph()
         ]),
         html.Div(children=[
             # Distribución de Activos.
-            html.H1("Registro", style={"text-align":"center"})
+            html.H1("Registro", style={"text-align":"center"}),
+            dash_table.DataTable()
         ])
         ])
 
@@ -23,7 +27,8 @@ sum_ary = html.Div(children=[
     html.Div(children=[
         html.Div(children=[
             # Dias para la fecha de corte.
-            html.H1("Dias para pagar la tarjeta")
+            html.H1("Dias para pagar la tarjeta"),
+            dcc.Graph()
         ], style={"width":"50%"}),
         html.Div(children=[
             # Fecha Actual
@@ -34,7 +39,9 @@ sum_ary = html.Div(children=[
     html.Div(children=[
         html.Div(children=[
             # Uso de Crédito Historico por Año
-            html.H1("Crédito Histórico")
+            dcc.Dropdown(),
+            html.H1("Crédito Histórico"),
+            dcc.Graph()
         ], style={"width":"50%"}),
         html.Div(children=[
             # Uso de Crédito Mensual
@@ -51,12 +58,14 @@ expenses = html.Div(children=[
     html.H1("Gastos Personales", style = {"text-align": "center"}),
     html.Div(children=[
         html.Div(children=[
-            html.H1("Consumo Mensual"),
             # Grafica de Consumo Total por Mes
+            html.H1("Consumo Mensual"),
+            dcc.Graph()
         ], style= {"width": "50%"}),
         html.Div(children=[
-            html.H1("Distribución por Tarjeta")
             # Grafica por Consumo Total por Mes
+            html.H1("Distribución por Tarjeta"),
+            dcc.Graph()
         ], style= {"width": "50%"})
     ], style=MULTI_COLUMN)
 ])
