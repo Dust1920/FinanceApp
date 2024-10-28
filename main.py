@@ -1,49 +1,51 @@
 """
     Finance App
 """
-import os
-
 # DashBoard
+from dashboard import title
+from dashboard import principal_tabs as ptab
+
+
 from dash import Dash
 from dash import html, dcc, Input, Output
 
 
-# Load Data
-FOLDER_NAME = "data"
-REFRESH = 1
+SELECTED_STYLE = {
+    "principal tabs": {
+        "color": "red",
+        "border-radius":20
+    }
+}
 
-if REFRESH or not os.path.exists(FOLDER_NAME):
-    if not os.path.exists(FOLDER_NAME):
-        os.mkdir(FOLDER_NAME)
-    from GD import download
+STYLE = {
+    "principal tabs": {
+        "color": "blue",
+        "fontSize": 20,
+        "border-radius":20
 
-    # Google Sheets of FinanceApp
-    from data import x
-    finances_folder = x.finances_folder
-
-    # Folder Name to save the Finance Data.
-    download.charge_finance_data(FOLDER_NAME, finances_folder)
-
-
-
-
-
-TEST = 0
-if TEST:
-    from finances import credit_cards as cc
-    print(cc.TOTAL_CREDIT)
-
+    }
+}
 
 # Create DashBoard
-
-DASHBOARD = 0
-if DASHBOARD:
-
-    app = Dash(__name__)
-    app.title = "Finanzas Personales"
-
-    app.layout = html.Div()
+app = Dash(__name__)
+app.title = "Finanzas Personales"
 
 
-    if __name__ == "__main__":
-        app.run(debug=True)
+app.layout = html.Div(children=[
+    title.PRINCIPAL,
+    dcc.Tabs(children=[
+        dcc.Tab(label = "Portafolio", children=ptab.portfoly,
+                selected_style= SELECTED_STYLE["principal tabs"]),
+        dcc.Tab(label = "Resumen", children=ptab.sum_ary,
+                selected_style= SELECTED_STYLE["principal tabs"]),
+        dcc.Tab(label = "Gastos", children=ptab.expenses,
+                selected_style= SELECTED_STYLE["principal tabs"])
+    ], style=STYLE['principal tabs'])
+]
+)
+
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

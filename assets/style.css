@@ -1,3 +1,21 @@
-html {
-    background-color: aqua;
+body {
+    background-color: wheat;
+    font-family: "Verdana";
+}
+
+principal-title {
+    text-align: center;
+}
+
+principal-tabs {
+    background-color: red;
+}
+
+sub-tab {
+    background-color: greenyellow;
+    color: gray;
+}
+
+sel-subtab {
+    color: blue;
 }
