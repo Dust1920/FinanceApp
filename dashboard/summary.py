@@ -1,28 +1,11 @@
 from dash import html, dcc
-from dash import dash_table
 
 
 MULTI_COLUMN = {"padding": "5px",
-                "display": "flex",
-                "background-color":"red"}
+                "display": "flex"}
 
-# Portfoly
-portfoly = html.Div(
-    children=[
-        html.H1("Portafolio de Inversiones"),
-        html.Div(children=[
-            # Distribución de Portafolio
-            dcc.Graph()
-        ]),
-        html.Div(children=[
-            # Distribución de Activos.
-            html.H1("Registro", style={"text-align":"center"}),
-            dash_table.DataTable()
-        ])
-        ])
 
-# Summary
-sum_ary = html.Div(children=[
+SUMMARY = html.Div(children=[
     html.H1("Resumen general"),
     html.Div(children=[
         html.Div(children=[
@@ -52,23 +35,5 @@ sum_ary = html.Div(children=[
             html.H1("", style={"margin":"5px"}),
             html.H1("Crédito Total: ", style={"margin-left":"10px"})
         ], style={"width":"50%"})
-    ], style=MULTI_COLUMN)
-])
-
-
-# Expenses
-expenses = html.Div(children=[
-    html.H1("Gastos Personales", style = {"text-align": "center"}),
-    html.Div(children=[
-        html.Div(children=[
-            # Grafica de Consumo Total por Mes
-            html.H1("Consumo Mensual"),
-            dcc.Graph()
-        ], style= {"width": "50%"}),
-        html.Div(children=[
-            # Grafica por Consumo Total por Mes
-            html.H1("Distribución por Tarjeta"),
-            dcc.Graph()
-        ], style= {"width": "50%"})
     ], style=MULTI_COLUMN)
 ])

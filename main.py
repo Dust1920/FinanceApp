@@ -2,12 +2,17 @@
     Finance App
 """
 # DashBoard
-from dashboard import title
-from dashboard import principal_tabs as ptab
-
-
+## Dash Libraries
 from dash import Dash
 from dash import html, dcc, Input, Output
+
+# Personal Libraries
+from dashboard import title
+from dashboard import portfoly as pf
+from dashboard import expenses as xp
+from dashboard import summary as sm
+
+
 
 
 SELECTED_STYLE = {
@@ -34,11 +39,11 @@ app.title = "Finanzas Personales"
 app.layout = html.Div(children=[
     title.PRINCIPAL,
     dcc.Tabs(children=[
-        dcc.Tab(label = "Portafolio", children=ptab.portfoly,
+        dcc.Tab(label = "Portafolio", children=pf.PORTFOLY,
                 selected_style= SELECTED_STYLE["principal tabs"]),
-        dcc.Tab(label = "Resumen", children=ptab.sum_ary,
+        dcc.Tab(label = "Resumen", children= sm.SUMMARY,
                 selected_style= SELECTED_STYLE["principal tabs"]),
-        dcc.Tab(label = "Gastos", children=ptab.expenses,
+        dcc.Tab(label = "Gastos", children= xp.EXPENSES,
                 selected_style= SELECTED_STYLE["principal tabs"])
     ], style=STYLE['principal tabs'])
 ]

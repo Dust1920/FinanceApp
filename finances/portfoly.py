@@ -16,9 +16,11 @@ TOTAL_PORTFOLY = reg['Precio Actual'].sum()
 
 NEW_INVERSION = 500
 
-print(reg.columns)
-
+#print(reg.columns)
+def difference_actua_goal():
+    return 0
 # Calculate the Difference Amount between Actual* Inversion and Goal Inversion.
+
 for s in res.index:
     actives_w_s = reg[reg['Parte en Portafolio'] == s]
     if len(actives_w_s) > 0:
@@ -58,20 +60,23 @@ for s in res.index:
     else:
         res.loc[s,'Nuevo Porcentaje'] = 0
 
-print(res)
+#print(res)
+
+
+
 
 # Pie Objective
+if __name__ == "__main__":
+    pie_obj = px.pie(res, names = res.index, values="Objetivo (%)",
+                    hole = 0.7, title="Portfoly Objective")
+    # pie_obj.show()
 
-pie_obj = px.pie(res, names = res.index, values="Objetivo (%)",
-                 hole = 0.7, title="Portfoly Objective")
-# pie_obj.show()
+    # Pie Actual
+    pie_act = px.pie(res, names = res.index, values="Nuevo Porcentaje",
+                    hole = 0.7, title="Portfoly New")
+    pie_act.show()
 
-# Pie Actual
-pie_act = px.pie(res, names = res.index, values="Nuevo Porcentaje",
-                 hole = 0.7, title="Portfoly New")
-pie_act.show()
-
-# Pie Inversion
-pie_nv = px.pie(res, names = res.index, values="Nueva Inversión",
-                 hole = 0.7, title="New Inversion")
-pie_nv.show()
+    # Pie Inversion
+    pie_nv = px.pie(res, names = res.index, values="Nueva Inversión",
+                    hole = 0.7, title="New Inversion")
+    pie_nv.show()
