@@ -39,15 +39,18 @@ sum_ary = html.Div(children=[
     html.Div(children=[
         html.Div(children=[
             # Uso de Crédito Historico por Año
-            dcc.Dropdown(),
             html.H1("Crédito Histórico"),
+            dcc.Dropdown(options = [2023,2024,2025],
+                         value = 2024,
+                         clearable = False,
+                         style={"font-size":"30px"}),
             dcc.Graph()
         ], style={"width":"50%"}),
         html.Div(children=[
             # Uso de Crédito Mensual
-            html.H1("Uso de Crédito: "),
-            html.H1(""),
-            html.H1("Crédito Total: ")
+            html.H1("Uso de Crédito:", style={"margin-left":"10px"}),
+            html.H1("", style={"margin":"5px"}),
+            html.H1("Crédito Total: ", style={"margin-left":"10px"})
         ], style={"width":"50%"})
     ], style=MULTI_COLUMN)
 ])
