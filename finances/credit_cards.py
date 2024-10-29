@@ -123,4 +123,4 @@ for gi in g_cu.index:
     g_cu.loc[gi, 'Credit Use'] =  round(credit_use * 100, 2)
 
 plot_gcu = px.line(g_cu, x = g_cu.index, y = "Credit Use")
-plot_gcu.show()
+

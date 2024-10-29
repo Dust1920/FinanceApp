@@ -4,7 +4,7 @@
 # DashBoard
 ## Dash Libraries
 from dash import Dash
-from dash import html, dcc, Input, Output
+from dash import html, dcc
 
 # Personal Libraries
 from dashboard import title
@@ -48,9 +48,6 @@ app.layout = html.Div(children=[
     ], style=STYLE['principal tabs'])
 ]
 )
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
