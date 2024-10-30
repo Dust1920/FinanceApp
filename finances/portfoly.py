@@ -1,6 +1,7 @@
 """
     Transform Data: Portfoly
 """
+
 import pandas as pd
 import plotly.express as px
 
@@ -27,12 +28,11 @@ def distribution(dr = res, ds = reg):
                             "x":0.5, "y":0.5, "font_size":20, "showarrow":False}])
     return port_dist
 
-res['Diferencia'] = (res['Objetivo (%)'] - res['Actual (%)']) * TOTAL_PORTFOLY
-print(res)
 
 
 
-def difference_goal_actual(new_inversion, d_b = res):
+
+def difference_goal_actual(n_i, d_b = res):
     """
     Calculate the money difference between the actual inversion and 
     """
@@ -40,13 +40,49 @@ def difference_goal_actual(new_inversion, d_b = res):
         actives_w_s = reg[reg['Parte en Portafolio'] == s_i]
         if len(actives_w_s) > 0:
             active_t = actives_w_s['Precio Actual'].sum()
-            obj_amo = (TOTAL_PORTFOLY + new_inversion) * d_b.loc[s_i, 'Objetivo (%)']
-            print(new_inversion)
+            obj_amo = (TOTAL_PORTFOLY + n_i) * d_b.loc[s_i, 'Objetivo (%)']
             d_b.loc[s_i,'Diferencia'] = obj_amo - active_t
         else:
             d_b.loc[s_i,'Diferencia'] = 0
     return d_b
 
+
+def new_inversion(nv_inv, d_b = res):
+    """
+        Calculate the new inversions
+    """
+    for s_ii in d_b.index:
+        if nv_inv >= 0:
+            if d_b.loc[s_ii, 'Diferencia'] > 0:
+                diff_pos = d_b[d_b['Diferencia'] > 0]
+                diff_pos = diff_pos['Diferencia'].sum()
+                u = d_b.loc[s_ii, 'Diferencia'] / diff_pos * nv_inv
+                d_b.loc[s_ii, 'Nueva Inversión'] = u
+            else:
+                d_b.loc[s_ii, 'Nueva Inversión'] = 0
+        else:
+            if d_b.loc[s_ii, 'Diferencia'] <= 0:
+                diff_neg = d_b[d_b['Diferencia'] <= 0]
+                diff_neg = diff_neg['Diferencia'].sum()
+                u = d_b.loc[s_ii, 'Diferencia'] / diff_neg * nv_inv
+                d_b.loc[s_ii, 'Nueva Inversión'] = u
+            else:
+                d_b.loc[s_ii, 'Nueva Inversión'] = 0
+    return d_b
+
+def new_percentage(nv_i, d1 = res, d2 = reg):
+    """
+        Calculate the new percentage after the new inversion. 
+    """
+    for s_k in d1.index:
+        actives_w_s = d2[d2['Parte en Portafolio'] == s_k]
+        if len(actives_w_s) > 0:
+            active_t = actives_w_s['Precio Actual'].sum()
+            n_p = TOTAL_PORTFOLY + nv_i
+            d1.loc[s_k,'Nuevo Porcentaje'] = (active_t + d1.loc[s_k, 'Nueva Inversión']) / n_p
+        else:
+            d1.loc[s_k,'Nuevo Porcentaje'] = 0
+    return d1
 
 
 
@@ -55,77 +91,15 @@ def portfoly_df(amount, d_b = res):
         Create a Portfoly Table
     """
     d_b = difference_goal_actual(amount, d_b)
+    d_b = new_inversion(amount)
+    d_b = new_percentage(amount, d_b)
     db_table = d_b.copy()
-    db_table['Actual (%)'] = db_table['Actual (%)'].transform(lambda x: f"{round(x,2) * 100}%")
-    db_table['Objetivo (%)'] = db_table['Objetivo (%)'].transform(lambda x: f"{round(x,2) * 100}%")
-    db_table['Diferencia'] = db_table['Diferencia'].transform(lambda x: f"{round(x,2)}")    
+    db_table['Actual (%)'] = db_table['Actual (%)'].transform(lambda x: f"{round(x * 100,2)}%")
+    db_table['Objetivo (%)'] = db_table['Objetivo (%)'].transform(lambda x: f"{round(x * 100,2)}%")
+    db_table['Diferencia'] = db_table['Diferencia'].transform(lambda x: f"{round(x,2)}")
+    db_table['Nueva Inversión'] = db_table['Nueva Inversión'].transform(lambda x: f"{round(x,2)}")
+    db_table['Nuevo Porcentaje'] = db_table['Nuevo Porcentaje'].transform(lambda x: f"{round(x * 100,2)}%")
     return db_table
-
-
-s = pd.DataFrame()
-## Portfoly Table
-res_table = res.copy()
-res_table['Actual (%)'] = res_table['Actual (%)'].transform(lambda x: f"{round(x,2) * 100}%")
-res_table['Objetivo (%)'] = res_table['Objetivo (%)'].transform(lambda x: f"{round(x,2) * 100}%")
-res_table['Diferencia'] = res_table['Diferencia'].transform(lambda x: f"{round(x,2)}")
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-NEW_INVERSION = 500
-
-#print(reg.columns)
-
-# Calculate the Difference Amount between Actual* Inversion and Goal Inversion.
-for s in res.index:
-    actives_w_s = reg[reg['Parte en Portafolio'] == s]
-    if len(actives_w_s) > 0:
-        active_t = actives_w_s['Precio Actual'].sum()
-        obj_amo = (TOTAL_PORTFOLY + NEW_INVERSION) * res.loc[s, 'Objetivo (%)']
-        res.loc[s,'Diferencia'] = obj_amo - active_t
-    else:
-        res.loc[s,'Diferencia'] = 0
-
-# Calculate the New Inversion.
-for s in res.index:
-    if NEW_INVERSION >= 0:
-        if res.loc[s, 'Diferencia'] > 0:
-            diff_pos = res[res['Diferencia'] > 0]
-            diff_pos = diff_pos['Diferencia'].sum()
-            u = res.loc[s, 'Diferencia'] / diff_pos * NEW_INVERSION
-            res.loc[s, 'Nueva Inversión'] = u
-        else:
-            res.loc[s, 'Nueva Inversión'] = 0
-    else:
-        if res.loc[s, 'Diferencia'] <= 0:
-            diff_neg = res[res['Diferencia'] <= 0]
-            diff_neg = diff_neg['Diferencia'].sum()
-            u = res.loc[s, 'Diferencia'] / diff_neg * NEW_INVERSION
-            res.loc[s, 'Nueva Inversión'] = u
-        else:
-            res.loc[s, 'Nueva Inversión'] = 0
-
-# Calculate the New Percentage
-
-for s in res.index:
-    actives_w_s = reg[reg['Parte en Portafolio'] == s]
-    if len(actives_w_s) > 0:
-        active_t = actives_w_s['Precio Actual'].sum()
-        NEW_PORTFOLY = TOTAL_PORTFOLY + NEW_INVERSION
-        res.loc[s,'Nuevo Porcentaje'] = (active_t +  res.loc[s, 'Nueva Inversión']) / (NEW_PORTFOLY)
-    else:
-        res.loc[s,'Nuevo Porcentaje'] = 0
-
-"""
 
 
 # Pie Objective

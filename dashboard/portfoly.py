@@ -57,7 +57,7 @@ def add_new_inversion(amount):
     if not portfoly.pd.isnull(amount):
         port_df = portfoly.portfoly_df(amount)
     else:
-        port_df = portfoly.res_table
+        port_df = portfoly.portfoly_df(0)
     return port_df.to_dict("records")
 
 @callback(
@@ -70,7 +70,7 @@ def portfoly_v(amount):
     """
     text = ""
     if amount:
-        text = f"Valor del Portafolio: {portfoly.TOTAL_PORTFOLY + amount}"
+        text = f"Valor del Portafolio: ${round(portfoly.TOTAL_PORTFOLY + amount,2):,}"
     else:
-        text = f"Valor del Portafolio: {portfoly.TOTAL_PORTFOLY}"
+        text = f"Valor del Portafolio: {round(portfoly.TOTAL_PORTFOLY, 2)}"
     return text
