@@ -1,4 +1,35 @@
+"""
+    Summary Tab
+"""
+import datetime as dt
 from dash import html, dcc
+from finances import credit_cards as cc
+
+
+MONTHS = {
+    1: "January",
+    2: "February",
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "September",
+    10: "October",
+    11: "November",
+    12: "December",
+}
+
+
+
+
+
+DNOW = dt.datetime.now()
+DDAY = DNOW.day
+DMONTH = DNOW.month
+DYEAR = DNOW.year
+
 
 
 MULTI_COLUMN = {"padding": "5px",
@@ -16,7 +47,7 @@ SUMMARY = html.Div(children=[
         html.Div(children=[
             # Fecha Actual
             html.H1("Fecha de Hoy"),
-            html.H2("")
+            html.H2(f"{MONTHS[DMONTH]},{DDAY},{DYEAR}")
         ],style = {"width":"50%"}),
     ], style=MULTI_COLUMN),
     html.Div(children=[
@@ -27,7 +58,7 @@ SUMMARY = html.Div(children=[
                          value = 2024,
                          clearable = False,
                          style={"font-size":"30px"}),
-            dcc.Graph()
+            dcc.Graph(figure = cc.plot_gcu)
         ], style={"width":"50%"}),
         html.Div(children=[
             # Uso de Crédito Mensual

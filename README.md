@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Personal Finances is a big problem in Mexico
+The Personal Finances is a big problem in Mexico and the administration's of expenses  
 
 
 ## Finance Design

@@ -76,6 +76,25 @@ df_cut = all_cc_df(PLOT_T)
 plot_cut = df_to_plotly_df(df_cut, CARD, PLOT_T)
 fig_cut = px.line(plot_cut, x = "Date", y = PLOT_T,
                   color = CARD, title = PLOT_T)
+
+def plot_cards(y, year, color = "Card"):
+    """
+        Plot by value type (Payment, Cut, I-FM)
+    """
+
+    plot_names = {
+        "I-FM":"Interest Free Months",
+        "Cut": "Balance Cut",
+        "Payment": "Payment (avoid interests)"
+    }
+
+    df = all_cc_df(y)
+    plot = df_to_plotly_df(df, color, y)
+    plot = plot[plot['Date'].str.endswith(year)]
+    print(plot)
+    fig = px.line(plot, x = "Date", y = y,
+                    color = color, title = plot_names[y])
+    return fig
 # fig_cut.show()
 
 # Plot by Credit Card
@@ -83,6 +102,13 @@ CREDIT_CARD = "ORO"
 oro = raw[f"History {CREDIT_CARD}"]
 plot_oro = df_to_plotly_df(oro, "Amount","Cash", cols = ["Cut","Payment","I-FM", "Credit Limit"])
 fig_card = px.line(plot_oro, x= "Date", y= "Cash", color= "Amount")
+
+
+
+
+
+
+
 # fig_card.show()
 
 # Credit Score by Card
@@ -123,4 +149,4 @@ for gi in g_cu.index:
     g_cu.loc[gi, 'Credit Use'] =  round(credit_use * 100, 2)
 
 plot_gcu = px.line(g_cu, x = g_cu.index, y = "Credit Use")
-
+print(g_cu)
