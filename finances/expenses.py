@@ -33,13 +33,13 @@ def fyearmonth(year, month):
         Filter df for year and month
     """
     exp_y = fyear(year)
-    exp_ym = exp_y[exp_y['Month'] == month]
-    return exp_ym
+    exp_s = exp_y[exp_y['Month'] == month]
+    return exp_s
 
 tyear = YEARS[0]
 tmonth = MONTHS[0]
 exp_ym = fyearmonth(tyear, tmonth)
-print(exp_ym)
+# print(exp_ym)
 
 
 PLOT_N = ['Category', 'SubCategory', 'Concept','Credit Card', 'Sector', 'Level']

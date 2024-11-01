@@ -3,8 +3,8 @@
         
 """
 import pandas as pd
-pd.options.mode.copy_on_write = True
 import plotly.express as px
+pd.options.mode.copy_on_write = True
 
 i_fm = pd.read_excel("data\\I-FM.xlsx")
 

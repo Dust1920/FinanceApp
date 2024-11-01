@@ -1,8 +1,12 @@
 """
     Summary Tab
 """
+
+
 import datetime as dt
 from dash import html, dcc
+from dash import Input, Output, callback
+
 from finances import credit_cards as cc
 
 
@@ -54,11 +58,13 @@ SUMMARY = html.Div(children=[
         html.Div(children=[
             # Uso de Crédito Historico por Año
             html.H1("Crédito Histórico"),
-            dcc.Dropdown(options = [2023,2024,2025],
+            dcc.Dropdown(id = "C-Year",
+                         options = [2023,2024,2025],
                          value = 2024,
                          clearable = False,
-                         style={"font-size":"30px"}),
-            dcc.Graph(figure = cc.plot_gcu)
+                         style={"font-size":"30px",
+                                "height":"50px"}),
+            dcc.Graph(id = "Credit-Use-per-Year")
         ], style={"width":"50%"}),
         html.Div(children=[
             # Uso de Crédito Mensual
@@ -68,3 +74,18 @@ SUMMARY = html.Div(children=[
         ], style={"width":"50%"})
     ], style=MULTI_COLUMN)
 ])
+
+@callback(
+    Output("Credit-Use-per-Year","figure"),
+    Input("C-Year", "value")
+)
+
+def credit_use_y(year):
+    """
+        Create a Plot of Credit Use for Year
+    """
+    if year:
+        fig = cc.credit_use(year)
+    else:
+        fig = cc.credit_use(2024)
+    return fig

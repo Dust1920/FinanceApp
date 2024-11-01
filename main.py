@@ -13,8 +13,6 @@ from dashboard import expenses as xp
 from dashboard import summary as sm
 
 
-
-
 SELECTED_STYLE = {
     "principal tabs": {
         "color": "red",
@@ -22,14 +20,15 @@ SELECTED_STYLE = {
     }
 }
 
+
 STYLE = {
     "principal tabs": {
         "color": "blue",
         "fontSize": 20,
         "border-radius":20
-
     }
 }
+
 
 # Create DashBoard
 app = Dash(__name__)

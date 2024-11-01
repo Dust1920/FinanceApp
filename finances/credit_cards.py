@@ -18,6 +18,8 @@ raw_g = raw_g.set_index("Name", drop=True)
 # Total amount of the Limit Credit
 TOTAL_CREDIT = raw_g['Credit Limit'].sum()
 
+
+print(raw_g)
 # Auxiliar Functions
 def list_cc():
     """
@@ -30,6 +32,7 @@ def list_cc():
         if k.startswith(hist):
             credit_cards.append(k)
     return credit_cards
+
 
 def all_cc_df(col, **kwargs):
     """
@@ -53,15 +56,16 @@ def all_cc_df(col, **kwargs):
         col_df.loc[:, name_cards[nc]] = df.loc[:,col]
     return col_df
 
+
 def df_to_plotly_df(df: pd.DataFrame, col_tname, col_data, **kwargs):
     """
     Convert a Pandas DataFrame a DataFrame to Plot with Plotly. 
     """
     nx = len(df.index)
     sel_cols = kwargs.get("cols", df.columns)
-    print(sel_cols)
     ny = len(sel_cols)
-    result = pd.DataFrame(index = list(range(nx * ny)), columns=["Date", col_tname, col_data])
+    result = pd.DataFrame(index = list(range(nx * ny)),
+                          columns=["Date", col_tname, col_data])
     i = 0
     for x in df.index:
         for y in sel_cols:
@@ -69,13 +73,6 @@ def df_to_plotly_df(df: pd.DataFrame, col_tname, col_data, **kwargs):
             i = i + 1
     return result
 
-# Plot by value type. (Payment, Cut, I-FM)
-PLOT_T = "I-FM"
-CARD = "Card"
-df_cut = all_cc_df(PLOT_T)
-plot_cut = df_to_plotly_df(df_cut, CARD, PLOT_T)
-fig_cut = px.line(plot_cut, x = "Date", y = PLOT_T,
-                  color = CARD, title = PLOT_T)
 
 def plot_cards(y, year, color = "Card"):
     """
@@ -91,11 +88,20 @@ def plot_cards(y, year, color = "Card"):
     df = all_cc_df(y)
     plot = df_to_plotly_df(df, color, y)
     plot = plot[plot['Date'].str.endswith(year)]
-    print(plot)
+    # print(plot)
     fig = px.line(plot, x = "Date", y = y,
                     color = color, title = plot_names[y])
     return fig
-# fig_cut.show()
+
+
+# Plot by value type. (Payment, Cut, I-FM)
+PLOT_T = "I-FM"
+CARD = "Card"
+df_cut = all_cc_df(PLOT_T)
+plot_cut = df_to_plotly_df(df_cut, CARD, PLOT_T)
+fig_cut = px.line(plot_cut, x = "Date", y = PLOT_T,
+                  color = CARD, title = PLOT_T)
+
 
 # Plot by Credit Card
 CREDIT_CARD = "ORO"
@@ -111,20 +117,30 @@ fig_card = px.line(plot_oro, x= "Date", y= "Cash", color= "Amount")
 
 # fig_card.show()
 
+CARD = "Card"
+
 # Credit Score by Card
 PLOT_T = "Credit Limit"
-CARD = "Card"
 df_cl = all_cc_df(PLOT_T)
 plot_cl = df_to_plotly_df(df_cl, CARD, PLOT_T)
 
 PLOT_T = "Cut"
-CARD = "Card"
 df_cut = all_cc_df(PLOT_T)
 plot_cut = df_to_plotly_df(df_cut, CARD, PLOT_T)
+
+print(plot_cl)
+print(df_cut)
+print(plot_cut)
+p_credit = pd.DataFrame(plot_cl.groupby('Date')['Credit Limit'].sum())
+p_score = pd.DataFrame(plot_cut.groupby('Date')['Cut'].sum())
+
+print(p_credit)
+print(p_score)
 
 plot_score = plot_cut.copy()
 plot_score['Credit Use'] = plot_score['Cut'] / plot_cl['Credit Limit'] * 100
 plot_score['Credit Use'] = plot_score['Credit Use'].transform(lambda x: round(x,2))
+
 
 fig_cu = px.line(plot_score, x = "Date", y = "Credit Use", color = "Card")
 # fig_cu.show()
@@ -132,7 +148,6 @@ fig_cu = px.line(plot_score, x = "Date", y = "Credit Use", color = "Card")
 # Credit Use Genral
 g_cl = pd.DataFrame(plot_cl.groupby('Date', sort=False)['Credit Limit'].sum())
 g_cut = pd.DataFrame(plot_cut.groupby('Date', sort=False)['Cut'].sum())
-
 
 def cu_op(x,y):
     """
@@ -143,10 +158,16 @@ def cu_op(x,y):
         u = x / y
     return u
 
-g_cu = g_cut.copy()
-for gi in g_cu.index:
-    credit_use = cu_op(g_cu.loc[gi, 'Cut'], g_cl.loc[gi, 'Credit Limit'])
-    g_cu.loc[gi, 'Credit Use'] =  round(credit_use * 100, 2)
 
-plot_gcu = px.line(g_cu, x = g_cu.index, y = "Credit Use")
-print(g_cu)
+def credit_use(year, df = g_cut):
+    """
+        Calcuñate the Credit Use by Year
+    """
+    g_cu = df.copy()
+    sk = g_cu.index.str.endswith(str(year)[2:])
+    g_cu = g_cu.loc[sk]
+    for gi in g_cu.index:
+        cuse = cu_op(g_cu.loc[gi, 'Cut'], g_cl.loc[gi, 'Credit Limit'])
+        g_cu.loc[gi, 'Credit Use'] =  round(cuse * 100, 2)
+    plot_gcu = px.line(g_cu, x = g_cu.index, y = "Credit Use")
+    return plot_gcu
