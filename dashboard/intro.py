@@ -10,9 +10,14 @@ tab = html.Div(children=[
                className="divtext"),
         html.Div(children=[
             html.Div(children=[
-                html.H2("Tarjetas de Crédito")
+                html.H2("Tarjetas de Crédito"),
+                html.H2("Gastos Corrientes"),
+                html.H2("Meses sin Intereses"),
+                html.H2("Portafolio")          
             ], style={"width":"50%"}),
             html.Div(children=[
+                    html.H3("Suba los archivos con los nombres correspondientes <br>\
+                            Categoria.xlsx"),
                     dcc.Upload(
                         id="upload-data",
                         children=html.Div([
@@ -39,3 +44,11 @@ tab = html.Div(children=[
     ], className="multicolumn")
     ]),
 ])
+
+
+@callback(
+    Output("A", "data"), Input("upload-data","names"), Input("upload-data","contents")
+)
+
+def upload_files(names, contents):
+    return 10
