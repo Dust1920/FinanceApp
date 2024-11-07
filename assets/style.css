@@ -1,0 +1,45 @@
+html {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+    background-color: rgb(151, 252, 242);
+}
+
+.title-text {
+    text-align: center;
+}
+
+.mtab {
+    font-size: 25px;
+    border-radius: 50%;
+    margin: 10px;
+}
+
+.selt1 {
+    background-color: lightgray !important;
+    font-size: 25px;
+}
+
+.divtitle {
+    font-size: 50px;
+}
+
+.divtext {
+    font-size: 20px;
+}
+
+.multicolumn {
+    display: flex;   
+}
+
+.divupload {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    border-width: 1px;
+    border-style: dashed;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px;
+}
