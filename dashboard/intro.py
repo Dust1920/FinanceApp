@@ -13,7 +13,8 @@ tab = html.Div(children=[
                 html.H2("Tarjetas de Crédito"),
                 html.H2("Gastos Corrientes"),
                 html.H2("Meses sin Intereses"),
-                html.H2("Portafolio")          
+                html.H2("Portafolio"),
+                html.H3(id = "A")
             ], style={"width":"50%"}),
             html.Div(children=[
                     html.H3("Suba los archivos con los nombres correspondientes <br>\
@@ -47,8 +48,13 @@ tab = html.Div(children=[
 
 
 @callback(
-    Output("A", "data"), Input("upload-data","names"), Input("upload-data","contents")
+    Output("A", "children"), [Input("upload-data","filename"), Input("upload-data","contents")]
 )
 
-def upload_files(names, contents):
+def upload_files(filename, contents):
+    """
+        Upload Basic Files to Dashboard
+    """
+    if contents:
+        print(len(contents), len(filename))
     return 10
